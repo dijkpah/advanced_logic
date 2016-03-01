@@ -102,9 +102,25 @@ $$
 \Gamma \vdash \Delta, \psi \rightarrow \phi
 }
 $$
+
+$$
+\infer[R_\rightarrow]{\vdash ((p \leftrightarrow q) \wedge (q \leftrightarrow r)) \rightarrow (r \leftrightarrow p)}{
+	\infer[L_\wedge]{((p \leftrightarrow q) \wedge (q \leftrightarrow r)) \vdash (r \leftrightarrow p)}{
+		\infer[L_\leftrightarrow]{(p \leftrightarrow q), (q \leftrightarrow r) \vdash (r \leftrightarrow p)}{	
+			\infer[L_\leftrightarrow]{(p \rightarrow q),(q \rightarrow p), (q \leftrightarrow r) \vdash (r \leftrightarrow p)}{		
+				\infer[L_\leftrightarrow]{(p \rightarrow q),(q \rightarrow p), (q \rightarrow r),(r \rightarrow q) \vdash (r \leftrightarrow p)}{					
+				}			
+			}				
+		}
+	}
+}
+$$
 \section{Gentzen}
 
 \section{Hilbert}
+
+
+
 
 
 
