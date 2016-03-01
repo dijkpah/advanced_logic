@@ -13,6 +13,7 @@
 \documentclass[]{article}
 \usepackage{proof}
 \usepackage{tikz}
+\usepackage{rotating}
 \usetikzlibrary{trees}
 
 \begin{document}
@@ -102,19 +103,47 @@ $$
 \Gamma \vdash \Delta, \psi \rightarrow \phi
 }
 $$
-
+\begin{sidewaysfigure}
+    \centering
+\begingroup\makeatletter\def\f@size{5}\check@mathfonts
 $$
 \infer[R_\rightarrow]{\vdash ((p \leftrightarrow q) \wedge (q \leftrightarrow r)) \rightarrow (r \leftrightarrow p)}{
 	\infer[L_\wedge]{((p \leftrightarrow q) \wedge (q \leftrightarrow r)) \vdash (r \leftrightarrow p)}{
 		\infer[L_\leftrightarrow]{(p \leftrightarrow q), (q \leftrightarrow r) \vdash (r \leftrightarrow p)}{	
 			\infer[L_\leftrightarrow]{(p \rightarrow q),(q \rightarrow p), (q \leftrightarrow r) \vdash (r \leftrightarrow p)}{		
-				\infer[L_\leftrightarrow]{(p \rightarrow q),(q \rightarrow p), (q \rightarrow r),(r \rightarrow q) \vdash (r \leftrightarrow p)}{					
+				\infer[R_\leftrightarrow]{(p \rightarrow q),(q \rightarrow p), (q \rightarrow r),(r \rightarrow q) \vdash (r \leftrightarrow p)}{	
+					\infer[R_\rightarrow]{(p \rightarrow q),(q \rightarrow p), (q \rightarrow r),(r \rightarrow q) \vdash (r \rightarrow p)}{
+						\infer[L_\rightarrow]{r,(p \rightarrow q),(q \rightarrow p), (q \rightarrow r),(r \rightarrow q) \vdash p}{
+							r,(p \rightarrow q),(q \rightarrow p), (q \rightarrow r) \vdash p,r 
+							&
+							\infer[L_\rightarrow]{r,q,(p \rightarrow q),(q \rightarrow p), (q \rightarrow r) \vdash p}{
+								r,q,(p \rightarrow q), (q \rightarrow r) \vdash p,q
+								&
+								r,q,p,(p \rightarrow q), (q \rightarrow r) \vdash p 
+							} 
+						}	
+					}	
+					&
+					\infer[R_\rightarrow]{(p \rightarrow q),(q \rightarrow p), (q \rightarrow r),(r \rightarrow q) \vdash (p \rightarrow r)}{	
+						\infer[L_\rightarrow]{p,(p \rightarrow q),(q \rightarrow p), (q \rightarrow r),(r \rightarrow q) \vdash r}{	
+							p,(q \rightarrow p), (q \rightarrow r),(r \rightarrow q) \vdash r,p
+							&
+							\infer[L_\rightarrow]{p,q,(q \rightarrow p), (q \rightarrow r),(r \rightarrow q) \vdash r}{	
+								p,q,(q \rightarrow p),(r \rightarrow q) \vdash r,q
+								&
+								p,q,r,(q \rightarrow p),(r \rightarrow q) \vdash r 
+							}	 
+						}	
+					}			
 				}			
 			}				
 		}
 	}
 }
-$$
+$$\endgroup
+	\caption{Proof for $\vdash ((p \leftrightarrow q) \wedge (q \leftrightarrow r)) \rightarrow (r \leftrightarrow p)$ in $G$}
+    \label{fig:awesome_image}
+\end{sidewaysfigure}
 \section{Gentzen}
 
 \section{Hilbert}
