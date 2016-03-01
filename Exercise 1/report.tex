@@ -91,12 +91,20 @@ formula $(\neg p \rightarrow r) \wedge (q \rightarrow r)$ has the same models $M
 \end{figure}
 
 \section{Logical Equivalence}
+$$
+\infer[(L_\leftrightarrow)]{\Gamma, \phi \leftrightarrow \psi\vdash\Delta}{\Gamma, \phi \rightarrow \psi, \psi \rightarrow \phi\vdash\Delta}
+$$
 
+$$
+\infer[(R_\leftrightarrow)]{\Gamma\vdash\Delta, \phi \leftrightarrow \psi}{
+\Gamma \vdash \Delta, \phi \rightarrow \psi
+&
+\Gamma \vdash \Delta, \psi \rightarrow \phi
+}
+$$
 \section{Gentzen}
 
 \section{Hilbert}
-
-
 
 
 
