@@ -92,6 +92,40 @@ formula $(\neg p \rightarrow r) \wedge (q \rightarrow r)$ has the same models $M
 \end{figure}
 
 \section{Logical Equivalence}
+
+\textbf{a)} \\
+We prove by induction: \\
+\textbf{basis} $n = 1$: $p_1 \equiv p_1$\\
+\textbf{induction} $n > 1$ \\
+Assumption: $\neg (p_1 \wedge ...\wedge p_{n-1}) \equiv \neg p_1 \vee ... \vee \neg p_{n-1}$\\
+To prove: $\neg (p_1 \wedge ...\wedge p_{n-1} \wedge p_n) \equiv \neg p_1 \vee ... \vee \neg p_{n-1} \vee \neg p_n$\\
+Deduction: \\
+$\neg p1 \vee ... \vee \neg p_{n-1} \vee \neg p_n \\
+\equiv (\neg p1 \vee ... \vee \neg p_{n-1}) \vee \neg p_n \\
+\equiv \neg (p_1 \wedge ... \wedge p_{n-1}) \vee \neg p_n$   (substitute assumption) \\$
+\equiv \neg ((p_1 \wedge ... \wedge p_{n-1}) \wedge p_n)$ (De Morgen's law) \\ $
+\equiv \neg (p_1 \wedge ... \wedge p_{n-1} \wedge p_n)$ \\ \\
+
+\noindent \textbf{Conclusion}: $\neg (p_n \wedge ... \wedge p_0) \equiv \neg p_n \vee ... \vee \neg p_1$
+
+\noindent \textbf{b)}\\
+We again prove by induction. \\
+\textbf{Basis} $n = 1$: $ p_1 \rightarrow p_0 \equiv p_1 \rightarrow p_1$\\
+\textbf{Induction} $n > 1$:\\
+Assumption: $p_{n-1} \rightarrow (...\rightarrow(p_1 \rightarrow p_0)...) \equiv (p_{n-1} \wedge ... \wedge p_1)\rightarrow p_0$\\
+To prove: $p_n\rightarrow (p_{n-1} \rightarrow (...\rightarrow(p_1 \rightarrow p_0)...)) \equiv (p_n \wedge p_{n-1} \wedge ... \wedge p_1)\rightarrow p_0$\\ 
+Deduction:\\
+$p_n\rightarrow (p_{n-1} \rightarrow (...\rightarrow(p_1 \rightarrow p_0)...)) \\
+p_n \rightarrow ((p_{n-1} \wedge ... \wedge p_1) \rightarrow p_0)$ (substitute assumption) \\ $
+\neg p_n \vee ((p_{n-1} \wedge ... \wedge p_1) \rightarrow p_0) \\
+\neg p_n \vee \neg (p_{n-1} \wedge ... \wedge p_1) \vee p_0 \\
+\neg (p_n \wedge (p_{n-1} \wedge ... \wedge p_1) \vee p_0$ (De Morgan's law) \\ $
+\neg (p_n \wedge p_{n-1} \wedge ... \wedge p_1) \vee p_0 \\
+(p_n \wedge p_{n-1} \wedge ... \wedge p_1) \rightarrow p_0$ \\ \\
+
+\noindent \textbf{Conclusion}: $p_n\rightarrow (p_{n-1} \rightarrow (...\rightarrow(p_1 \rightarrow p_0)...)) \equiv (p_n \wedge p_{n-1} \wedge ... \wedge p_1)\rightarrow p_0$\\ \\
+
+\section{Gentzen}
 $$
 \infer[(L_\leftrightarrow)]{\Gamma, \phi \leftrightarrow \psi\vdash\Delta}{\Gamma, \phi \rightarrow \psi, \psi \rightarrow \phi\vdash\Delta}
 $$
@@ -144,7 +178,6 @@ $$\endgroup
 	\caption{Proof for $\vdash ((p \leftrightarrow q) \wedge (q \leftrightarrow r)) \rightarrow (r \leftrightarrow p)$ in $G$}
     \label{fig:awesome_image}
 \end{sidewaysfigure}
-\section{Gentzen}
 
 \section{Hilbert}
 
