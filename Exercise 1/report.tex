@@ -15,6 +15,7 @@
 \usepackage{tikz}
 \usepackage{rotating}
 \usepackage{enumitem}
+\usepackage{mathtools, amssymb}
 \usetikzlibrary{trees}
 \usetikzlibrary{positioning}
 
@@ -138,6 +139,8 @@ p_n \rightarrow ((p_{n-1} \wedge ... \wedge p_1) \rightarrow p_0)$ (substitute a
 \noindent \textbf{Conclusion}: $p_n\rightarrow (p_{n-1} \rightarrow (...\rightarrow(p_1 \rightarrow p_0)...)) \equiv (p_n \wedge p_{n-1} \wedge ... \wedge p_1)\rightarrow p_0$\\ \\
 
 \section{Gentzen}
+\label{Gentzen}
+The Gentzen rules for $L_\leftrightarrow$ and $R_\leftrightarrow$ are:
 $$
 \infer[(L_\leftrightarrow)]{\Gamma, \phi \leftrightarrow \psi\vdash\Delta}{\Gamma, \phi \rightarrow \psi, \psi \rightarrow \phi\vdash\Delta}
 $$
@@ -149,6 +152,9 @@ $$
 \Gamma \vdash \Delta, \psi \rightarrow \phi
 }
 $$
+
+\noindent They are derived by substituting $\phi \leftrightarrow \psi$ with $\phi \rightarrow \psi \wedge \psi \rightarrow \phi$ and subsequently applying the $L_\wedge$ and $R_\wedge$ Gentzen rules to obtain the $L_\leftrightarrow$ and $R_\leftrightarrow$ rules respectively. The proof for Exercise \ref{Gentzen} is presented in Figure \ref{fig:gentzen}.
+
 \begin{sidewaysfigure}
     \centering
 \begingroup\makeatletter\def\f@size{5}\check@mathfonts
@@ -188,7 +194,7 @@ $$
 }
 $$\endgroup
 	\caption{Proof for $\vdash ((p \leftrightarrow q) \wedge (q \leftrightarrow r)) \rightarrow (r \leftrightarrow p)$ in $G$}
-    \label{fig:awesome_image}
+    \label{fig:gentzen}
 \end{sidewaysfigure}
 
 \section{Hilbert}
@@ -263,6 +269,54 @@ $$\endgroup
 \noindent Conclusion: $\vdash (p \rightarrow (q \rightarrow r) \rightarrow ((p \wedge q) \rightarrow r)$.
 
 \section{Clausal From}
+We will first need to convert the formulas to CNF:
+\begin{itemize}[noitemsep]
+\item $\phi_1 = (s\rightarrow t) \rightarrow (q \rightarrow (p \lor r))  = \lnot(\lnot s \lor t) \lor (\lnot q \lor (p \lor r)) 
+\\ = (\lnot\lnot s \wedge \lnot t) \lor (\lnot q \lor (p \lor r)) = (s \wedge \lnot t) \lor (\lnot q \lor (p \lor r))
+\\ = (s \lor (\lnot q \lor (p \lor r))) \wedge (\lnot t \lor (\lnot q \lor (p \lor r)))$
+\item $\phi_2 = (\lnot q \rightarrow \lnot t) \wedge \lnot(p \wedge q) =  (\lnot\lnot q \lor \lnot t) \wedge \lnot(p \wedge q) = (\lnot\lnot q \lor \lnot t) \wedge (\lnot p \lor \lnot q) 
+\\ = (q \lor \lnot t) \wedge (\lnot p \lor \lnot q)$
+\item $\phi_3 = \lnot s \lor \lnot q$
+\item $\phi_4 = q \lor t$
+\item $\phi_5 = (p \rightarrow t) \wedge (\lnot r \lor p) = (\lnot p \lor t) \wedge (\lnot r \lor p)$
+\end{itemize}
+If we convert these formulas to clausal form we get:
+\begin{itemize}[noitemsep]
+\item $\phi_1 = \{p\bar{q}rs, p\bar{q}r\bar{t}\}$
+\item $\phi_2 = \{q\bar{t}, \bar{p}\bar{q}\}$
+\item $\phi_3 = \{\bar{q}\bar{s}\}$
+\item $\phi_4 = \{qt\}$
+\item $\phi_5 = \{\bar{p}t, p\bar{r}\}$
+\item $\{\phi_1,\phi_2,\phi_3,\phi_4,\phi_5\} = \{p\bar{q}rs, p\bar{q}r\bar{t}, q\bar{t}, \bar{p}\bar{q}, \bar{q}\bar{s}, qt, \bar{p}t, p\bar{r}\ \}$
+\end{itemize}
+
+\noindent The resolution refutation is represented as a tree in Figure \ref{fig:refutation}\\
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[level distance=1cm,
+  level 1/.style={sibling distance=2cm},
+  level 2/.style={sibling distance=1cm},
+  level 3/.style={sibling distance=2cm},
+  level 4/.style={sibling distance=2cm}]
+  \node {$\square$}
+    child {node {$q$}
+      child {node {$qt$}}
+      child {node {$q\bar{t}$}}
+    }
+    child {node{$\bar{q}$}
+		child {node {$\bar{p}\bar{q}$}}    
+		child {node {$p\bar{q}$}
+			child {node {$p\bar{r}$}}		
+			child {node {$p\bar{q}r$}
+				child {node {$p\bar{q}rs$}}			
+				child {node {$\bar{q}\bar{s}$}}			
+			}
+		}    
+    };
+\end{tikzpicture}
+\caption{Resolution refutation tree for $\{\phi_1,\phi_2,\phi_3,\phi_4,\phi_5\}$} \label{fig:refutation}
+\end{figure}
+
 \section{BDDs}
 When we use the Apply algorithm on the sub-BDD for subformula $p \wedge q$, combined with the sub-BDD for the formula $r$ using the $\rightarrow$ operator, we get the BDD for $(p \wedge q)\rightarrow r$:
 
@@ -461,4 +515,25 @@ If we now use the Apply algorithm using the previously obtained sub-BDDs and the
 When we apply the Reduce algorithm on this result we get \begin{tikzpicture}\footnotesize\node[r] (T) {T};\end{tikzpicture} which means that $\models (p\rightarrow(q\rightarrow r))\rightarrow((p\wedge q)\rightarrow r)$ holds, since it yields $True$ for all values of $p$, $q$ and $r$.
 \section{...}
 \section{The Lady, or the Tiger?}
+Let's start with defining the necessary propositions:\\
+\\
+\textbf{$L_1$}: there is a lady in room 1\\
+\textbf{$L_2$}: there is a lady in room 2\\
+\textbf{$T_1$}: there is a tiger in room 1\\
+\textbf{$T_2$}: there is a tiger in room 2\\
+\\
+We now that the following must hold due to the facts on the signs:\\
+\\
+$T_1 \oplus L_2 $ (\textit{Either a tiger is in this room, or a lady is in the other room}) \\
+$\wedge L_1$ (\textit{A lady is in the other room}) \\
+\\
+We also now that a room will open up to a lady \textit{or} a tiger, not both, which means the following must also hold:\\
+\\
+$(T_1 \oplus L_1) \wedge (T_2 \oplus L_2)$\\
+\\
+Since we know $L_1$ is true, we can conclude that $T_1$ must be false, since there are not both a tiger and a lady in room 1. From this we can derive that $L_2$ must be true, since $T_1 \oplus L_2 $ must hold. Lastly we can conclude that $T_2$ must also be false, since there are not both a tiger and a lady in room 2. This gives us the (only) model $\{(L_1 \rightarrow T), (T_1 \rightarrow F), (L_2 \rightarrow T), (T_2 \rightarrow F)\}$ for the formula $(T_1 \oplus L_1) \wedge (T_2 \oplus L_2) \wedge (T_1 \oplus L_2) \wedge L_1$.\\
+\\
+The solution to the puzzle is thus that there is a lady in both room 1 and room 2. 
+
+
 \end{document}
