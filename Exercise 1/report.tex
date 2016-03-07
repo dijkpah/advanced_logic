@@ -14,18 +14,30 @@
 \usepackage{proof}
 \usepackage{tikz}
 \usepackage{rotating}
+\usepackage{enumitem}
 \usetikzlibrary{trees}
+\usetikzlibrary{positioning}
 
+\tikzset{%
+  zeroarrow/.style = {-stealth,dashed},
+  onearrow/.style = {-stealth,solid},
+  c/.style = {circle,draw,solid,minimum width=2em,
+        minimum height=2em},
+  r/.style = {rectangle,draw,solid,minimum width=2em,
+        minimum height=2em}
+}
 \begin{document}
 
 \section{Semantic Tableaux}
-\textbf{a)} From the open leaves of the tableau we see that there are the following models that satisfy the formula $(p\rightarrow q) \rightarrow r$: $\{
-\{(p\rightarrow F), (q, \rightarrow F), (r\rightarrow T)\},
-\{(p\rightarrow F), (q, \rightarrow T), (r\rightarrow T)\},
-\{(p\rightarrow T), (q, \rightarrow F), (r\rightarrow F)\},
-\{(p\rightarrow T), (q, \rightarrow F), (r\rightarrow T)\},
-\{(p\rightarrow T), (q, \rightarrow T), (r\rightarrow T)\}
-\}$. In the set of propositions $P = \{p, q, r\}$, the
+\textbf{a)} From the open leaves of the tableau we see that there are the following models that satisfy the formula $(p\rightarrow q) \rightarrow r$: $\{$
+\begin{itemize}[noitemsep]
+\item[] $\{(p\rightarrow F), (q, \rightarrow F), (r\rightarrow T)\},$
+\item[] $\{(p\rightarrow F), (q, \rightarrow T), (r\rightarrow T)\},$
+\item[] $\{(p\rightarrow T), (q, \rightarrow F), (r\rightarrow F)\},$
+\item[] $\{(p\rightarrow T), (q, \rightarrow F), (r\rightarrow T)\},$
+\item[] $\{(p\rightarrow T), (q, \rightarrow T), (r\rightarrow T)\}$
+\end{itemize}$\}$. 
+In the set of propositions $P = \{p, q, r\}$, the
 formula $(\neg p \rightarrow r) \wedge (q \rightarrow r)$ has the same models $M((p\rightarrow q) \rightarrow r) = M((\neg p \rightarrow r) \wedge (q \rightarrow r))$. Therefore, we conclude that $(p\rightarrow q) \rightarrow r$ and $(\neg p \rightarrow r) \wedge (q \rightarrow r)$ are logically equivalent.
 
 \begin{figure}[h]
@@ -191,6 +203,203 @@ $$\endgroup
 
 
 
+\section{Clausal From}
+\section{BDDs}
+When we use the Apply algorithm on the sub-BDD for subformula $p \wedge q$, combined with the sub-BDD for the formula $r$ using the $\rightarrow$ operator, we get the BDD for $(p \wedge q)\rightarrow r$:
 
+\begin{tikzpicture}[node distance=1cm and 0.5cm]\footnotesize
+   \node[c] (p) {p};
+   \node[c] (q) [below left=of p] {q};
+   \node[r] (final-one) [below =of q] {T};
+   \node[r] (final-zero) [right=of final-one] {F};
+   \draw[onearrow] (p) -- (q);
+   \draw[onearrow] (q) -- (final-one);
+   \draw[zeroarrow] (p) -- (final-zero);
+   \draw[zeroarrow] (q) -- (final-zero);
+\end{tikzpicture}
+\indent $\rightarrow$ \indent 
+\begin{tikzpicture}[node distance=1cm and 0.3cm]\footnotesize
+   \node[c] (r) {r};
+   \node[r] (final-one) [below left=of r] {T};
+   \node[r] (final-zero) [right=of final-one] {F};
+   \draw[onearrow] (r) -- (final-one);
+   \draw[zeroarrow] (r) -- (final-zero);
+\end{tikzpicture}
+\indent $=$ \indent 
+\begin{tikzpicture}[node distance=1cm and 0.9cm]\footnotesize
+   \node[c] (p) {p};
+   \node[c] (q) [below left=of p] {q};
+   \node[c] (r1) [below left=of q] {r};
+   \node[r] (final-one1) [below left=of r1] {T$\rightarrow$T};
+   \node[r] (final-zero1) [right=of final-one1] {T$\rightarrow$F};
+   
+   \node[c] (r2) [below right=of q] {r};
+   \node[r] (final-one2) [below left=of r2] {F$\rightarrow$T};
+   \node[r] (final-zero2) [right=of final-one2] {F$\rightarrow$F};
 
+   \node[c] (r3) [right=of r2] {r};
+   \node[r] (final-zero3) [below right=of r3] {F$\rightarrow$F};
+   \node[r] (final-one3) [left=of final-zero3] {F$\rightarrow$T};
+
+   \draw[onearrow] (p) -- (q);
+   \draw[onearrow] (q) -- (r1);
+   \draw[onearrow] (r1) -- (final-one1);
+   \draw[onearrow] (r2) -- (final-one2);
+   \draw[onearrow] (r3) -- (final-one3);
+   \draw[zeroarrow] (p) -- (r3);
+   \draw[zeroarrow] (q) -- (r2);
+   \draw[zeroarrow] (r1) -- (final-zero1);
+   \draw[zeroarrow] (r2) -- (final-zero2);
+   \draw[zeroarrow] (r3) -- (final-zero3);
+\end{tikzpicture}
+\\
+\\
+When we apply the Reduce algorithm on this result we get:
+\\
+\begin{tikzpicture}[node distance=1cm and 1cm]\footnotesize
+   \node[c] (p) {p};
+   \node[c] (q) [below left=of p] {q};
+
+   \node[c] (r) [below=of q] {r};
+   \node[r] (final-one) [below right=of r] {T};
+   \node[r] (final-zero) [left=of final-one] {F};
+
+   \draw[onearrow] (p) -- (q);
+   \draw[onearrow] (q) -- (r);
+   \draw[onearrow] (r) -- (final-one);
+
+   \draw[zeroarrow] (p) --(final-one);
+   \draw[zeroarrow] (r) -- (final-zero);
+   \draw[zeroarrow] (q) -- (final-one);
+\end{tikzpicture}\\
+\\
+We will now use the Apply algorithm on the sub-BDD for subformula $p$, combined with the sub-BDD for the formula $q \rightarrow r$ using the $\rightarrow$ operator, to get the BDD for $p \rightarrow (q\rightarrow r)$:
+\\
+\begin{tikzpicture}[node distance=1cm and 0.3cm]\footnotesize
+   \node[c] (p) {p};
+   \node[r] (final-one) [below left=of p] {T};
+   \node[r] (final-zero) [right=of final-one] {F};
+   \draw[onearrow] (p) -- (final-one);
+   \draw[zeroarrow] (p) -- (final-zero);
+\end{tikzpicture}
+\indent $\rightarrow$ \indent 
+\begin{tikzpicture}[node distance=1cm and 0.5cm]\footnotesize
+   \node[c] (q) {q};
+   \node[c] (r) [below left=of q] {r};
+   \node[r] (final-zero) [below =of r] {F};
+   \node[r] (final-one) [right=of final-zero] {T};
+
+   \draw[onearrow] (q) -- (r);
+   \draw[onearrow] (r) -- (final-one);
+
+   \draw[zeroarrow] (q) -- (final-one);
+   \draw[zeroarrow] (r) -- (final-zero);
+\end{tikzpicture}
+\indent $=$ \indent 
+\begin{tikzpicture}[node distance=1cm and 0.9cm]\footnotesize
+   \node[c] (p) {p};
+   \node[c] (q1) [below left=of p] {q};
+   \node[c] (q2) [below right=of p] {q};
+   \node[c] (r1) [below =of q1] {r};
+   \node[c] (r2) [below =of q2] {r};
+   \node[r] (final-one1) [below=of r1] {T$\rightarrow$T};
+   \node[r] (final-zero1) [right=of final-one1] {T$\rightarrow$F};
+  
+   \node[r] (final-one2) [below=of r2] {F$\rightarrow$T};
+   \node[r] (final-zero2) [right=of final-one2] {F$\rightarrow$F};
+
+   \node[r] (final-zero3) [right=of r1] {T$\rightarrow$T};
+   \node[r] (final-zero4) [right=of r2] {F$\rightarrow$T};
+
+   \draw[onearrow] (p) -- (q1);
+   \draw[onearrow] (q1) -- (r1);
+   \draw[onearrow] (q2) -- (r2);
+   \draw[onearrow] (r1) -- (final-one1);
+   \draw[onearrow] (r2) -- (final-one2);
+
+   \draw[zeroarrow] (p) -- (q2);
+   \draw[zeroarrow] (q1) -- (final-zero3);
+   \draw[zeroarrow] (r1) -- (final-zero1);
+   \draw[zeroarrow] (q2) -- (final-zero4);
+   \draw[zeroarrow] (r2) -- (final-zero2);
+\end{tikzpicture}
+\\
+\\
+When we apply the Reduce algorithm on this result we (again) get:\\
+\\
+\begin{tikzpicture}[node distance=1cm and 1cm]\footnotesize
+   \node[c] (p) {p};
+   \node[c] (q) [below left=of p] {q};
+
+   \node[c] (r) [below=of q] {r};
+   \node[r] (final-one) [below right=of r] {T};
+   \node[r] (final-zero) [left=of final-one] {F};
+
+   \draw[onearrow] (p) -- (q);
+   \draw[onearrow] (q) -- (r);
+   \draw[onearrow] (r) -- (final-one);
+
+   \draw[zeroarrow] (p) --(final-one);
+   \draw[zeroarrow] (r) -- (final-zero);
+   \draw[zeroarrow] (q) -- (final-one);
+\end{tikzpicture}\\
+\\
+If we now use the Apply algorithm using the previously obtained sub-BDDs and the $\rightarrow$ operator, we get the BDD for $(p\rightarrow(q\rightarrow r))\rightarrow((p\wedge q)\rightarrow r)$:\\
+\\
+\begin{tikzpicture}[node distance=1cm and 1cm]\footnotesize
+   \node[c] (p) {p};
+   \node[c] (q) [below left=of p] {q};
+
+   \node[c] (r) [below=of q] {r};
+   \node[r] (final-one) [below right=of r] {T};
+   \node[r] (final-zero) [left=of final-one] {F};
+
+   \draw[onearrow] (p) -- (q);
+   \draw[onearrow] (q) -- (r);
+   \draw[onearrow] (r) -- (final-one);
+
+   \draw[zeroarrow] (p) --(final-one);
+   \draw[zeroarrow] (r) -- (final-zero);
+   \draw[zeroarrow] (q) -- (final-one);
+\end{tikzpicture}
+\indent $\rightarrow$ \indent 
+\begin{tikzpicture}[node distance=1cm and 1cm]\footnotesize
+   \node[c] (p) {p};
+   \node[c] (q) [below left=of p] {q};
+
+   \node[c] (r) [below=of q] {r};
+   \node[r] (final-one) [below right=of r] {T};
+   \node[r] (final-zero) [left=of final-one] {F};
+
+   \draw[onearrow] (p) -- (q);
+   \draw[onearrow] (q) -- (r);
+   \draw[onearrow] (r) -- (final-one);
+
+   \draw[zeroarrow] (p) --(final-one);
+   \draw[zeroarrow] (r) -- (final-zero);
+   \draw[zeroarrow] (q) -- (final-one);
+\end{tikzpicture}
+\indent $=$ \indent 
+\begin{tikzpicture}[node distance=1cm and 1cm]\footnotesize
+   \node[c] (p) {p};
+   \node[c] (q) [below left=of p] {q};
+
+   \node[c] (r) [below=of q] {r};
+   \node[r] (final-zero1) [below=of r] {F$\rightarrow$F};
+   \node[r] (final-one) [right=of final-zero1] {T$\rightarrow$T};
+   \node[r] (final-zero2) [right=of r] {T$\rightarrow$T};
+   \node[r] (final-zero3) [right=of q] {T$\rightarrow$T};
+
+   \draw[onearrow] (p) -- (q);
+   \draw[onearrow] (q) -- (r);
+   \draw[onearrow] (r) -- (final-one);
+
+   \draw[zeroarrow] (p) --(final-zero3);
+   \draw[zeroarrow] (r) -- (final-zero1);
+   \draw[zeroarrow] (q) -- (final-zero2);
+\end{tikzpicture}\\
+\\
+When we apply the Reduce algorithm on this result we get \begin{tikzpicture}\footnotesize\node[r] (T) {T};\end{tikzpicture} which means that $\models (p\rightarrow(q\rightarrow r))\rightarrow((p\wedge q)\rightarrow r)$ holds, since it yields $True$ for all values of $p$, $q$ and $r$.
+\section{...}
+\section{The Lady, or the Tiger?}
 \end{document}
