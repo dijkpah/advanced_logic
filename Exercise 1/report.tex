@@ -192,16 +192,75 @@ $$\endgroup
 \end{sidewaysfigure}
 
 \section{Hilbert}
+In order to solve the theorem in H we first transform the formula eliminating all operators except for $\neg$ and $\rightarrow$. \\ 
+$$(p \rightarrow (q \rightarrow r)) \rightarrow ((p \wedge q) \rightarrow r)
+\equiv p \rightarrow (q \rightarrow r )) \rightarrow (\neg (p \rightarrow \neg q) \rightarrow r)
+$$
 
+\noindent To shorten the eventual proof we first prove that $\vdash \neg (p \rightarrow q) \rightarrow p$ and $\vdash (p \rightarrow q) \rightarrow q$. \\ \\
+\noindent Theorem 4.1:
+$$
+\infer
+	{\vdash \neg(p \rightarrow \neg q) \rightarrow p}
+	{\infer
+		{\neg (p \rightarrow \neg q) \vdash p}
+		{\infer
+			{p \wedge q \vdash p}
+			{p, q \vdash p}
+		}
+	}
+$$\\
 
+\noindent Theorem 4.2:
+$$
+\infer
+	{\vdash \neg(p \rightarrow \neg q) \rightarrow q}
+	{\infer
+		{\neg (p \rightarrow \neg q) \vdash q}
+		{\infer
+			{p \wedge q \vdash q}
+			{p, q \vdash q}
+		}
+	}
+$$\\
 
+\noindent The proof of $(p \rightarrow (q \rightarrow r)) \rightarrow (\neg (p \rightarrow \neg q) \rightarrow r)$ is listed in figure \ref{fig:proofH}. \\
 
+\begin{sidewaysfigure}
+    \centering
+\begingroup\makeatletter\def\f@size{5}\check@mathfonts
+$$
+\infer[DR]{\vdash (p \rightarrow (q \rightarrow r)) \rightarrow (\neg (p \rightarrow \neg q) \rightarrow r)}{
+	\infer[DR] {p \rightarrow (q \rightarrow r) \vdash \neg (p \rightarrow \neg q) \rightarrow r}{
+		\infer[MP]{p \rightarrow (q \rightarrow r), \neg (p \rightarrow \neg q) \vdash  r}{
+			\infer[MP]{p \rightarrow (q \rightarrow r), \neg (p \rightarrow \neg q) \vdash q}{
+				p \rightarrow (q \rightarrow r), \neg (p \rightarrow \neg q) \vdash \neg (p \rightarrow \neg q)
+				&
+				\infer{\Gamma \vdash \neg (p \rightarrow \neg q) \rightarrow q}{
+					Theorem 4.2
+				}
+			}
+			&
+			\infer[MP]{p \rightarrow (q \rightarrow r), \neg (p \rightarrow \neg q) \vdash q \rightarrow r}{
+				\infer[MP]{p \rightarrow (q \rightarrow r), \neg (p \rightarrow \neg q) \vdash p}{
+					p \rightarrow (q \rightarrow r), \neg (p \rightarrow \neg q) \vdash \neg (p \rightarrow \neg q)
+					&
+					\infer{\Gamma \vdash \neg (p \rightarrow \neg q) \rightarrow p}{
+						Theorem 4.1
+					}
+				}
+				&
+				p \rightarrow (q \rightarrow r), \neg (p \rightarrow \neg q) \vdash p \rightarrow (q \rightarrow r)
+			}
+		}
+	}
+}
+$$\endgroup
+	\caption{Proof for $(p \rightarrow (q \rightarrow r)) \rightarrow (\neg (p \rightarrow \neg q) \rightarrow r))$ in $H$}
+    \label{fig:proofH}
+\end{sidewaysfigure}
 
-
-
-
-
-
+\noindent Conclusion: $\vdash (p \rightarrow (q \rightarrow r) \rightarrow ((p \wedge q) \rightarrow r)$.
 
 \section{Clausal From}
 \section{BDDs}
