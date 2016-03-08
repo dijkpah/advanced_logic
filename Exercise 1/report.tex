@@ -198,36 +198,49 @@ $$\endgroup
 \end{sidewaysfigure}
 
 \section{Hilbert}
-In order to solve the theorem in H we first transform the formula eliminating all operators except for $\neg$ and $\rightarrow$. \\ 
+In order to solve the theorem in $H$ we first transform the formula eliminating all operators except for $\neg$ and $\rightarrow$. \\ 
 $$(p \rightarrow (q \rightarrow r)) \rightarrow ((p \wedge q) \rightarrow r)
 \equiv p \rightarrow (q \rightarrow r )) \rightarrow (\neg (p \rightarrow \neg q) \rightarrow r)
 $$
 
-\noindent To shorten the eventual proof we first prove that $\vdash \neg (p \rightarrow q) \rightarrow p$ and $\vdash (p \rightarrow q) \rightarrow q$. \\ \\
+\noindent To shorten the eventual proof we first prove that $\vdash \neg (p \rightarrow \neg q) \rightarrow p$ and $\vdash \neg (p \rightarrow \neg q) \rightarrow q$. \\ \\
 \noindent Theorem 4.1:
 $$
-\infer
-	{\vdash \neg(p \rightarrow \neg q) \rightarrow p}
-	{\infer
-		{\neg (p \rightarrow \neg q) \vdash p}
-		{\infer
-			{p \wedge q \vdash p}
-			{p, q \vdash p}
+\infer[MP]{\vdash \neg (p \rightarrow \neg q) \rightarrow p}{
+	\infer{\vdash (p \rightarrow \neg q) \rightarrow \neg p}{
+		\infer[Trans]{\vdash (\neg \neg q \rightarrow \neg p) \rightarrow \neg p}{
+			\infer[DR]{\vdash \neg \neg q \rightarrow (\neg p \rightarrow \neg p)}{
+				\infer[DR]{\neg \neg q \vdash \neg p \rightarrow \neg p}{
+					\neg \neg q, \neg p \vdash \neg p
+				}
+			}
 		}
 	}
-$$\\
+	&
+	\infer{\vdash ((p \rightarrow \neg q) \rightarrow \neg p) \rightarrow (\neg (p \rightarrow \neg q) \rightarrow p)}{
+		Axiom 3
+	}
+}
+$$
 
 \noindent Theorem 4.2:
 $$
-\infer
-	{\vdash \neg(p \rightarrow \neg q) \rightarrow q}
-	{\infer
-		{\neg (p \rightarrow \neg q) \vdash q}
-		{\infer
-			{p \wedge q \vdash q}
-			{p, q \vdash q}
+$$
+
+$$
+\infer[MP]{\vdash \neg (p \rightarrow \neg q) \rightarrow q}{
+	\infer[Trans]{\vdash (p \rightarrow \neg q) \rightarrow \neg q}{
+		\infer[DR]{\vdash p \rightarrow (\neg q \rightarrow \neg q)}{
+			\infer[DR]{p \vdash \neg q \rightarrow \neg q}{
+				p, \neg q \rightarrow \neg q
+			}
 		}
 	}
+	&
+	\infer{\vdash ((p \rightarrow \neg q) \rightarrow \neg q) \rightarrow (\neg (p\rightarrow \neg q) \rightarrow q)}{
+		Axiom 3
+	}
+}
 $$\\
 
 \noindent The proof of $(p \rightarrow (q \rightarrow r)) \rightarrow (\neg (p \rightarrow \neg q) \rightarrow r)$ is listed in figure \ref{fig:proofH}. \\
