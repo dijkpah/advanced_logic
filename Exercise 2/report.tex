@@ -29,7 +29,30 @@
 }
 \begin{document}
 
-\section{new}
+\section{Predicates and interpretation}
+\subsection{}
+$$
+\phi = \forall c.(\exists s.(\forall s'.(\neg att(s',c)\wedge eq(s,s')))\rightarrow can(c))
+$$
+$$I = <\{students, classes\},\{att, eq, can\}, \{\}>$$
+Where $students$ is the set of all students $classes$ is the set of all classes.\\
+$att(s,c)$ returns TRUE if student $s$ attends class $c$.\\
+$eq(a,b)$ returns TRUE if student $a$ and $b$ are the same student.\\
+$can(c)$ returns TRUE if course $c$ is cancelled.
+\subsection{}
+$$\phi = \forall p(\exists p'.\forall t.d(p,p',t) \wedge \exists t.\forall p'.d(p,p',t) \wedge \neg\forall p'.\forall t.d(p,p',t))$$
+$$I = <\{people, times\}, \{d\}, \{\}>$$
+where $people$ is the set of all people, $times$ is the set of all moments/time and $d(x,y,z)$ returns TRUE if person $x$ can deceive person $y$ at moment $z$.
+\subsection{}
+$$
+\phi = \exists c.(h(c)\wedge \exists c'.(h(c') \wedge \neg eq(c,c')\wedge \forall c''.(\neg h(c'')\vee eq(c,c'')\vee eq(c',c''))))
+$$
+$$
+I = <\{cats\},\{h, eq\}, \{\}>
+$$
+Where $cats$ is the set of all cats.\\
+h(c) returns TRUE if cat $c$ is in the house.\\
+eq(a,b) returns TRUE if cat $a$ and $b$ are the same cat.
 \section{new}
 \section{new}
 \section{Resolution}
@@ -40,7 +63,7 @@ $
 \forall x.((f(x)\vee d(x))\wedge (f(x) \rightarrow \neg l(x,C))\wedge (d(x)\rightarrow l(x,R))) \hspace{10pt}\wedge \\
 \forall y.((l(E,y) \leftrightarrow\neg l(B,y)) \wedge l(B,y)) \hspace{10pt}
 $
-$I = <{members, genres},{f,d,l},{B,E,C,R}>$ \\ \\
+$I = <\{members, genres\},\{f,d,l\},\{B,E,C,R\}>$ \\ \\
 B, E, C, R are constants for respectively Bob, Ellen, Comedy movies and Romance movies. \\
 f(x) returns TRUE if (and only if) x is a fighter.\\
 d(x) returns TRUE if (and only if)x is a dancer.\\
