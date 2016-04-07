@@ -1,0 +1,116 @@
+%	proofeg.tex	(An example file for proof.sty)
+%
+%		Mar 6, 1997
+%		Makoto Tatsuta
+%
+%	I hope you can learn how to use proof figure macros easily
+%	by these examples.
+
+
+\def\imp{\to}
+\def\land{\mathbin\&}
+% for LaTeX 2e naitive mode.
+\documentclass[]{article}
+\usepackage{proof}
+\usepackage{tikz}
+\usepackage{rotating}
+\usepackage{enumitem}
+\usepackage{mathtools, amssymb}
+\usetikzlibrary{trees}
+\usetikzlibrary{positioning}
+
+\tikzset{%
+  zeroarrow/.style = {-stealth,dashed},
+  onearrow/.style = {-stealth,solid},
+  c/.style = {circle,draw,solid,minimum width=2em,
+        minimum height=2em},
+  r/.style = {rectangle,draw,solid,minimum width=2em,
+        minimum height=2em}
+}
+\begin{document}
+
+\section{new}
+\section{new}
+\section{new}
+\section{Resolution}
+
+
+Case in First Order Logic: \\
+$
+\forall x.((f(x)\vee d(x))\wedge (f(x) \rightarrow \neg l(x,C))\wedge (d(x)\rightarrow l(x,R))) \hspace{10pt}\wedge \\
+\forall y.((l(E,y) \leftrightarrow\neg l(B,y)) \wedge l(B,y)) \hspace{10pt}
+$
+$I = <{members, genres},{f,d,l},{B,E,C,R}>$ \\ \\
+B, E, C, R are constants for respectively Bob, Ellen, Comedy movies and Romance movies. \\
+f(x) returns TRUE if (and only if) x is a fighter.\\
+d(x) returns TRUE if (and only if)x is a dancer.\\
+l(x,y) returns TRUE if (and only if) member x likes movie genre y.\\ \\
+Query in First Order Logic: $\exists x.(f(x) \wedge \neg d(x))$\\ \\
+In order to proof that there exists a fighter that is not a dancer we negate the query and use resolution to show that the negated query is not satisfiable.\\ \\
+$
+\forall x.((f(x)\vee d(x))\wedge (f(x) \rightarrow \neg l(x,C))\wedge (d(x)\rightarrow l(x,R))) \hspace{10pt}\wedge \\
+\forall y.((l(E,y) \leftrightarrow\neg l(B,y)) \wedge l(B,y)) \hspace{10pt} \wedge \\
+\neg\exists x.(f(x) \wedge \neg d(x))\\ \\
+$
+Separate identifiers:  \\
+$
+\forall x.((f(x)\vee d(x))\wedge (f(x) \rightarrow \neg l(x,C))\wedge (d(x)\rightarrow l(x,R))) \hspace{10pt}\wedge \\
+\forall y.((l(E,y) \leftrightarrow\neg l(B,y)) \wedge l(B,y)) \hspace{10pt} \wedge \\
+\neg\exists z.(f(z) \wedge \neg d(z))\\ \\
+$
+Convert operators:\\
+$
+\forall x.((f(x)\vee d(x))\wedge (\neg f(x) \vee \neg l(x,C))\wedge (\neg d(x)\vee l(x,R))) \hspace{10pt}\wedge \\ 
+\forall y.((\neg l(E,y) \vee \neg l(B,y)) \wedge (l(B,y) \vee l(E,y)) \wedge l(B,y))
+\hspace{10pt} \wedge\\
+\neg\exists z.(f(z) \wedge \neg d(z))\\ \\
+$
+Push negation inward:\\
+$
+\forall x.((f(x)\vee d(x))\wedge (\neg f(x) \vee \neg l(x,C))\wedge (\neg d(x)\vee l(x,R))) \hspace{10pt}\wedge \\
+\forall y.((\neg l(E,y) \vee \neg l(B,y)) \wedge (l(B,y) \vee l(E,y)) \wedge l(B,y))\hspace{10pt} \wedge\\
+\forall z.(\neg f(z) \vee d(z))\\ \\
+$
+Extract quantifiers:\\
+$
+\forall x.\forall y.\forall z.(f(x)\vee d(x))\wedge (\neg f(x) \vee \neg l(x,C))\wedge (\neg d(x)\vee l(x,R)) \hspace{10pt}\wedge \\
+(\neg l(E,y) \vee \neg l(B,y)) \wedge (l(B,y) \vee l(E,y)) \wedge l(B,y)\hspace{10pt}\\ \wedge
+(\neg f(z) \vee d(z))\\ \\
+$
+Clausal form:\\
+$
+fx\hspace{2pt}dx,\bar{f}x\hspace{2pt}\bar{l}xC,\bar{d}x\hspace{2pt}lxR,
+\bar{l}Ey \hspace{2pt} \bar{l}By, lBy\hspace{2pt} lEy, lBy,
+\bar{f}z \hspace{2pt} dz
+$\\ \\
+The resolution proving that the statement is unjustifiable is shown in \ref{fig:Res}.\\\\
+Conclusion: Resolution shows that the query $\neg\exists x.(f(x) \wedge \neg d(x))$ is unjustifiable. This proofs that there exists a fighter that is not a dancer.
+
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[level distance=1.5cm,
+  level 1/.style={sibling distance=3cm},
+  level 3/.style={sibling distance=1.5cm},
+  level 4/.style={sibling distance=1.5cm},
+  node distance = 10cm]
+  \node[align=center]{$\square$\\$[x\leftarrow E, y\leftarrow R, z\leftarrow z]$}
+   child{node[align=center]{$\bar{l}BR$\\$[x\leftarrow E, y\leftarrow R, z\leftarrow z]$}
+    child{ node[align=center]{$lxR$\\$[x\leftarrow z]$}
+  	  child {node [align=center]{$dx$\\$[x\leftarrow z]$}
+        child {node[align=center] {$fx\hspace{2pt}dx$}}
+        child {node[align=center] {$\bar{f}z\hspace{2pt}dz$}}
+      }
+      child{node[align=center]{$\bar{d}x\hspace{2pt}lxR$}}
+    }
+    child{node[align=center]{$\bar{l}Ey\hspace{2pt}\bar{l}By$}}
+   }
+   child{node[align=center]{$lBy$}}
+    ;
+\end{tikzpicture}
+\caption{Resolution for query $\neg\exists x.(f(x) \wedge\neg d(x)$} \label{fig:Res}
+\end{figure}
+
+\section{new}
+\section{new}
+\end{document}
