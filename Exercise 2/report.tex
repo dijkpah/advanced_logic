@@ -54,6 +54,35 @@ Where $cats$ is the set of all cats.\\
 h(c) returns TRUE if cat $c$ is in the house.\\
 eq(a,b) returns TRUE if cat $a$ and $b$ are the same cat.
 \section{Semantic Tableaux}
+\begin{center}
+$\neg\exists x.\forall y.((p(x,y) \wedge \neg p(y,x))\rightarrow (p(x,y) \rightarrow q(y,x)))$
+\\$|$\\
+$\forall y.\neg((p(a,y) \wedge \neg p(y,a))\rightarrow (p(a,y) \rightarrow q(y,a)))$
+\\$|$\\
+$\neg ((p(a,a) \wedge \neg p(a,a))\rightarrow (p(a,a) \rightarrow q(a,a)))$
+\\$|$\\
+$(p(a,a) \wedge \neg p(a,a)), \neg(p(a,a) \rightarrow q(a,a))$
+\\$|$\\
+$(p(a,a) \wedge \neg p(a,a)), p(a,a), \neg q(a,a)$
+\\$|$\\
+$p(a,a), \neg p(a,a), p(a,a), \neg q(a,a)$
+\end{center}
+\noindent This tableau closes, so we have to check for another instance of y, which is not equal to the instance of x:
+\\
+\begin{center}
+$\neg\exists x.\forall y.((p(x,y) \wedge \neg p(y,x))\rightarrow (p(x,y) \rightarrow q(y,x)))$
+\\$|$\\
+$\forall y.\neg((p(a,y) \wedge \neg p(y,a))\rightarrow (p(a,y) \rightarrow q(y,a)))$
+\\$|$\\
+$\neg ((p(a,b) \wedge \neg p(b,a))\rightarrow (p(a,b) \rightarrow q(b,a)))$
+\\$|$\\
+$(p(a,b) \wedge \neg p(b,a)), \neg(p(a,b) \rightarrow q(b,a))
+$\\$|$\\
+$(p(a,b) \wedge \neg p(b,a)), p(a,b), \neg q(b,a)$
+\\$|$\\
+$p(a,b), \neg p(b,a), p(a,b), \neg q(b,a)$
+\end{center}
+\noindent Since there are open endings in the tableau for the negation of the given formula, we can conclude that the formula is not valid.
 
 \section{Deductive systems}
 
