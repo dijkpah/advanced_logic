@@ -53,25 +53,30 @@ $$
 Where $cats$ is the set of all cats.\\
 h(c) returns TRUE if cat $c$ is in the house.\\
 eq(a,b) returns TRUE if cat $a$ and $b$ are the same cat.
+\section{Semantic Tableaux}
+
 \section{Deductive systems}
+
 \subsection{Genzen}
 $$
 \infer[\rightarrow_R]{\vdash\neg\exists x.\forall y.(p(x)\rightarrow q(y))\rightarrow\forall x. \exists y.(p(x)\wedge \neg q(y))}{
-	\infer{\neg\exists x.\forall y.(p(x)\rightarrow q(y)) \vdash \forall x. \exists y.(p(x)\wedge\neg q(y))}{
-		\infer{\forall x.\neg\forall y.(p(x)\rightarrow q(y)) \vdash \forall x. \exists y.(p(x)\wedge\neg q(y))}{
-			\infer{\forall x.\exists y.\neg(p(x)\rightarrow q(y)) \vdash \forall x. \exists y.(p(x)\wedge\neg q(y))}{
-				\infer{\forall x.\exists y.\neg(\neg p(x)\vee q(y)) \vdash \forall x. \exists y.(p(x)\wedge\neg q(y))}{
-					\infer{\forall x.\exists y.(p(x)\wedge\neg q(y)) \vdash \forall x. \exists y.(p(x)\wedge\neg q(y))}{
-						Axiom
-					}
-				}
-			}
+\infer[\neg_L]{\neg \exists x.\forall y(p(x)\rightarrow q(y)\vdash \forall x.\exists y.(p(x)\wedge \neg q(y))}{
+\infer[\forall_R]{\vdash \exists x.\forall y.(p(x)\rightarrow q(y), \forall x.\exists y.(p(x)\wedge \neg q(y))}{
+\infer[\exists_R]{\vdash \exists x.\forall y.(p(x)\rightarrow q(y), \exists y.(p(a)\wedge \neg q(y))}{
+\infer[\forall_R]{\vdash \forall y.(p(a)\rightarrow q(y), \exists y.(p(a)\wedge \neg q(y))}{
+\infer[\exists_R]{\vdash p(a)\rightarrow q(b), \exists y.(p(a)\wedge \neg q(y))}{
+\infer[\rightarrow_R]{\vdash p(a)\rightarrow q(b), p(a)\wedge \neg q(b)}{
+	\infer[\wedge_R]{p(a)\vdash q(b),p(a)\wedge\neg q(b)}{
+		\infer{p(a)\vdash q(b),p(a)}{Axiom}
+		&
+		\infer[\neg_R]{p(a)\vdash q(b),\neg q(b)}{
+			\infer{p(a),q(b)\vdash q(b)}{Axiom}
 		}
 	}
 }
+}}}}}}
 $$
-
-\section{new}
+\subsection{Hilbert}
 \section{Resolution}
 
 
@@ -79,7 +84,7 @@ Case in First Order Logic: \\
 $
 \forall x.((f(x)\vee d(x))\wedge (f(x) \rightarrow \neg l(x,C))\wedge (d(x)\rightarrow l(x,R))) \hspace{10pt}\wedge \\
 \forall y.((l(E,y) \leftrightarrow\neg l(B,y)) \wedge l(B,y)) \hspace{10pt}
-$
+$\\
 $I = <\{members, genres\},\{f,d,l\},\{B,E,C,R\}>$ \\ \\
 B, E, C, R are constants for respectively Bob, Ellen, Comedy movies and Romance movies. \\
 f(x) returns TRUE if (and only if) x is a fighter.\\
