@@ -53,7 +53,24 @@ $$
 Where $cats$ is the set of all cats.\\
 h(c) returns TRUE if cat $c$ is in the house.\\
 eq(a,b) returns TRUE if cat $a$ and $b$ are the same cat.
-\section{new}
+\section{Deductive systems}
+\subsection{Genzen}
+$$
+\infer[\rightarrow_R]{\vdash\neg\exists x.\forall y.(p(x)\rightarrow q(y))\rightarrow\forall x. \exists y.(p(x)\wedge \neg q(y))}{
+	\infer{\neg\exists x.\forall y.(p(x)\rightarrow q(y)) \vdash \forall x. \exists y.(p(x)\wedge\neg q(y))}{
+		\infer{\forall x.\neg\forall y.(p(x)\rightarrow q(y)) \vdash \forall x. \exists y.(p(x)\wedge\neg q(y))}{
+			\infer{\forall x.\exists y.\neg(p(x)\rightarrow q(y)) \vdash \forall x. \exists y.(p(x)\wedge\neg q(y))}{
+				\infer{\forall x.\exists y.\neg(\neg p(x)\vee q(y)) \vdash \forall x. \exists y.(p(x)\wedge\neg q(y))}{
+					\infer{\forall x.\exists y.(p(x)\wedge\neg q(y)) \vdash \forall x. \exists y.(p(x)\wedge\neg q(y))}{
+						Axiom
+					}
+				}
+			}
+		}
+	}
+}
+$$
+
 \section{new}
 \section{Resolution}
 
