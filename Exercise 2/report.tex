@@ -208,7 +208,7 @@ Conclusion: Resolution shows that the query $\neg\exists x.(f(x) \wedge \neg d(x
 \textbf{Second candidate}:  his claim is partially correct. Using resolution it is possible to prove that a formula is unsatisfiable. This means that every interpretation falsifies that formula, so there is no doubt that the candidate can find an interpretation which falsifies that formula, but it would not be the resolution algorithm that gives him the interpretation. The resolution algorithm only proofs that it is not possible to satisfy all clauses of the clausal formula, but does not yield an interpretation which yields false.
 \section{Prolog}
 \subsection{}
-The algorithm implemented in Prolog is listed in \ref{fig:Prolog}.
+The algorithm iterates over all elements of $L1$ and sequentially finding them and removing them from $L2$. The Prolog implementation is listed in Listing \ref{fig:Prolog}.
 \begin{lstlisting}[frame=single,caption={The code for $subset(L1,L2)$ in Prolog}]
 find(X,[X|_]).
 find(X,[_|Y]) :- find(X,Y).
