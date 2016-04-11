@@ -101,28 +101,6 @@ $$
 }}}}}}
 $$
 \subsection{Hilbert}
-$
-\Gamma = \forall x.\neg(q(x) \rightarrow \neg p(x)), \exists x.p(x) 
-$\\
-$$
-\infer[Definition \wedge (symmetric)]{\vdash \forall x.(p(x) \wedge q(x)) \rightarrow (\exists x.p(x) \rightarrow \exists x.q(x)) }{
-	\infer[Definition \wedge]{\vdash \forall x.(q(x) \wedge p(x)) \rightarrow (\exists x.p(x) \rightarrow \exists x.q(x)) }{
-		\infer[Deduction]{\vdash \forall x.\neg(q(x) \rightarrow \neg p(x)) \rightarrow (\exists x.p(x) \rightarrow \exists x.q(x)) }{
-			\infer[Deduction]{ \forall x.\neg(q(x) \rightarrow \neg p(x)) \vdash \exists x.p(x) \rightarrow \exists x.q(x) }{
-				\infer[Th. 8.14]{ \Gamma \vdash \exists x.q(x) }{
-					\infer[MP]{ \Gamma\vdash q(a) }{
-						\infer[Rule 8.6]{ \Gamma\vdash p(a)}{
-							\infer[Assumption]{ \Gamma\vdash \exists x.p(x) }{}
-						}
-						\infer[???]{ \Gamma\vdash p(a)\rightarrow q(a) }{
-									???							
-						}
-					}					
-				}
-			}
-		}
-	}
-}$$
 \section{Resolution}
 
 
