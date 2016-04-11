@@ -16,6 +16,7 @@
 \usepackage{rotating}
 \usepackage{enumitem}
 \usepackage{mathtools, amssymb}
+\usepackage{listings}
 \usetikzlibrary{trees}
 \usetikzlibrary{positioning}
 
@@ -28,6 +29,7 @@
         minimum height=2em}
 }
 \begin{document}
+\lstset{language=Prolog}
 
 \section{Predicates and interpretation}
 \subsection{}
@@ -36,13 +38,13 @@ $$
 $$
 $$I = <\{students, classes\},\{att, eq, can\}, \{\}>$$
 Where $students$ is the set of all students $classes$ is the set of all classes.\\
-$att(s,c)$ returns TRUE if student $s$ attends class $c$.\\
-$eq(a,b)$ returns TRUE if student $a$ and $b$ are the same student.\\
-$can(c)$ returns TRUE if course $c$ is cancelled.
+$att(s,c)$ returns TRUE if $s\in students$, $c\in classes$ and $s$ attends $c$.\\
+$eq(a,b)$ returns TRUE if instance a is equal to instance b.\\
+$can(c)$ returns TRUE if $c\in classes$ and $c$ is cancelled.
 \subsection{}
 $$\phi = \forall p(\exists p'.\forall t.d(p,p',t) \wedge \exists t.\forall p'.d(p,p',t) \wedge \neg\forall p'.\forall t.d(p,p',t))$$
 $$I = <\{people, times\}, \{d\}, \{\}>$$
-where $people$ is the set of all people, $times$ is the set of all moments/time and $d(x,y,z)$ returns TRUE if person $x$ can deceive person $y$ at moment $z$.
+where $people$ is the set of all people, $times$ is the set of all moments/times.\\ $d(x,y,z)$ returns TRUE if $x,y\in people$, $z\in times$ and $x$ can deceive $y$ at moment $z$.
 \subsection{}
 $$
 \phi = \exists c.(h(c)\wedge \exists c'.(h(c') \wedge \neg eq(c,c')\wedge \forall c''.(\neg h(c'')\vee eq(c,c'')\vee eq(c',c''))))
@@ -51,8 +53,8 @@ $$
 I = <\{cats\},\{h, eq\}, \{\}>
 $$
 Where $cats$ is the set of all cats.\\
-h(c) returns TRUE if cat $c$ is in the house.\\
-eq(a,b) returns TRUE if cat $a$ and $b$ are the same cat.
+$h(c)$ returns TRUE if $c\in cats$ and $c$ is in the house.\\
+$eq(a,b)$ returns TRUE if $a$ and $b$ are the same instance.\\
 \section{Semantic Tableaux}
 
 \begin{center}
@@ -113,7 +115,7 @@ f(x) returns TRUE if (and only if) x is a fighter.\\
 d(x) returns TRUE if (and only if)x is a dancer.\\
 l(x,y) returns TRUE if (and only if) member x likes movie genre y.\\ \\
 Query in First Order Logic: $\exists x.(f(x) \wedge \neg d(x))$\\ \\
-In order to proof that there exists a fighter that is not a dancer we negate the query and use resolution to show that the negated query is not satisfiable.\\ \\
+In order to proof that there exists a fighter that is not a dancer we negate the query and use resolution to show that the negated query is unsatisfiable.\\ \\
 $
 \forall x.((f(x)\vee d(x))\wedge (f(x) \rightarrow \neg l(x,C))\wedge (d(x)\rightarrow l(x,R))) \hspace{10pt}\wedge \\
 \forall y.((l(E,y) \leftrightarrow\neg l(B,y)) \wedge l(B,y)) \hspace{10pt} \wedge \\
@@ -150,7 +152,7 @@ fx\hspace{2pt}dx,\bar{f}x\hspace{2pt}\bar{l}xC,\bar{d}x\hspace{2pt}lxR,
 \bar{l}Ey \hspace{2pt} \bar{l}By, lBy\hspace{2pt} lEy, lBy,
 \bar{f}z \hspace{2pt} dz
 $\\ \\
-The resolution proving that the statement is unjustifiable is shown in \ref{fig:Res}.\\\\
+The resolution proving that the statement is unjustifiable is shown in Figure \ref{fig:Res}.\\\\
 Conclusion: Resolution shows that the query $\neg\exists x.(f(x) \wedge \neg d(x))$ is unjustifiable. This proofs that there exists a fighter that is not a dancer.
 
 
@@ -182,5 +184,36 @@ Conclusion: Resolution shows that the query $\neg\exists x.(f(x) \wedge \neg d(x
 \textbf{First candidate}:  his claim is incorrect. Kurt G\"odel has proven that it is impossible to capture all facts about natural number using the Peano axioms. His theory does not only work on the Peano axioms, but on all formal axiomatic systems for natural numbers.\\
 \\
 \textbf{Second candidate}:  his claim is partially correct. Using resolution it is possible to prove that a formula is unsatisfiable. This means that every interpretation falsifies that formula, so there is no doubt that the candidate can find an interpretation which falsifies that formula, but it would not be the resolution algorithm that gives him the interpretation. The resolution algorithm only proofs that it is not possible to satisfy all clauses of the clausal formula, but does not yield an interpretation which yields false.
-\section{new}
+\section{Prolog}
+\subsection{}
+The algorithm implemented in Prolog is listed in \ref{fig:Prolog}.
+\begin{lstlisting}[frame=single,caption={The code for $subset(L1,L2)$ in Prolog}]
+find(X,[X|_]).
+find(X,[_|Y]) :- find(X,Y).
+
+subset([],_).
+subset([X|T],L) :- find(X,L), subset(T,L).
+\end{lstlisting}
+\label{fig:Prolog}
+\subsection{}
+Rules:\\
+$find_1: find(x,n(x,y)) \leftarrow tt$\\
+$find_2: find(x,n(y,z)) \leftarrow find(x,z)$\\
+$subset_1: subset(e,x) \leftarrow tt$\\
+$subset_2: subset(n(x,y), z) \leftarrow find(x,z)  \wedge subset(y,z)$\\\\
+Query: $G_0:\neg subset(w,n(1,n(2,e)))$\\ \\
+Resolution:\\
+Rule $subset_2$: $\theta_1= \{w\leftarrow n(x,y), z\leftarrow n(1,n(2,e))\}$\\
+$G_1 = \neg(find(x,n(1,n(2,e)) \wedge subset(y,n(1,n(2,e)))\hspace{2pt})$\\
+$\equiv \neg find(x,n(1,n(2,e)) \vee subset(y,n(1,n(2,e))\hspace{2pt})$\\ \\
+$\theta_2= y \leftarrow y'$\\
+$G_2 = \neg find(x,n(1,n(2,e)) \vee subset(y',n(1,n(2,e))\hspace{2pt})$\\ \\
+Rule $find_1$: $\theta_3= \{x\leftarrow 1, y\leftarrow n(2,e)\}$\\
+$G_3 = \neg subset(y',n(1,n(2,e))$ \\ \\
+Rule $subset_1$: $\theta_4= \{y' \leftarrow e\}$\\
+$G_4 = F $\\ \\
+Counterexample: $\theta_1\theta_2\theta_3\theta_4: w \leftarrow n(1,e) $ ($[1]$ in Prolog)
+
+\subsection{}
+
 \end{document}
